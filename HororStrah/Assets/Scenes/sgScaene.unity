@@ -414,7 +414,7 @@ MonoBehaviour:
   speed: 2
   player: {fileID: 1731166233}
   gravity: -9.81
-  stopDistance: 2
+  stopDistance: 3
 --- !u!64 &1361679807
 MeshCollider:
   m_ObjectHideFlags: 0
