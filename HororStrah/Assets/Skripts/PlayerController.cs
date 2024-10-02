@@ -15,7 +15,19 @@ public class PlayerController : MonoBehaviour
 
     public Transform groundCheck;  
     public float groundDistance = 0.4f;  
-    public LayerMask groundMask;  
+    public LayerMask groundMask;
+
+    public Inventory inventory;
+
+    void OnTriggerEnter(Collider other)
+    {
+        Item item = other.GetComponent<Item>();
+        if (item != null)
+        {
+            inventory.AddItem(item);
+            Destroy(other.gameObject); // Óהאכÿול ןנוהלוע ס ךאנעû
+        }
+    }
 
     private void Start()
     {
