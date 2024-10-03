@@ -8,10 +8,13 @@ public class ZombieController : MonoBehaviour
     public float speed = 2f;  // Скорость движения зомби
     public Transform player;  // Игрок (цель для зомби)
     public float gravity = -9.81f;  // Сила гравитации
-    public float stopDistance = 2f;  // Расстояние до игрока, на котором зомби остановится
+    public float stopDistance = 2f;  // Расстояние до игрока, на котором зомби исчезнет
     private CharacterController controller;  // Ссылка на CharacterController
     private Vector3 velocity;  // Скорость падения
     private Vector3 moveDirection;  // Направление движения зомби
+    private bool isMoving;  // Флаг, движется ли зомби
+    public AudioSource scrimerAudio;  // Компонент для воспроизведения звука
+    private bool hasPlayedScreamer = false;  // Флаг, чтобы скример сработал один раз
 
     void Start()
     {
@@ -23,59 +26,74 @@ public class ZombieController : MonoBehaviour
         {
             animator = GetComponent<Animator>();
         }
+
+        // Убеждаемся, что скример не воспроизводится в начале
+        if (scrimerAudio == null || scrimerAudio.clip == null)
+        {
+            Debug.LogError("Не установлен AudioSource или аудиоклип для скримера!");
+        }
+        else
+        {
+            scrimerAudio.Stop();  // Останавливаем, если вдруг запустился по ошибке
+        }
     }
 
     void Update()
     {
-        // Проверка, находится ли зомби на земле
+        // Применение гравитации
         if (controller.isGrounded)
         {
-            // Если на земле, обнуляем скорость падения
-            velocity.y = -2f;  // Немного отрицательная величина, чтобы зомби плотно прилегал к земле
+            velocity.y = -2f; // Чтобы зомби был "приклеен" к земле
         }
         else
         {
-            // Если не на земле, продолжаем применять гравитацию
             velocity.y += gravity * Time.deltaTime;
         }
 
-        // Если игрок (цель) существует
         if (player != null)
         {
-            // Вычисляем расстояние до игрока
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            // Если дистанция больше 2 метров, зомби движется к игроку
-            if (distanceToPlayer > stopDistance)
+            // Если расстояние до игрока меньше stopDistance, зомби исчезает
+            if (distanceToPlayer <= stopDistance)
             {
-                // Рассчитываем направление движения зомби к игроку
-                Vector3 direction = (player.position - transform.position).normalized;
-                moveDirection = direction * speed;  // Задаем направление с учетом скорости
-
-                // Устанавливаем скорость для аниматора
-                animator.SetFloat("Speed", speed);
-
-                // Поворот зомби лицом к игроку
-                if (direction.x > 0)
+                if (!hasPlayedScreamer)
                 {
-                    transform.localScale = new Vector3(1, 1, 1);  // Повернуть вправо
+                    // Воспроизводим скример перед удалением зомби
+                    scrimerAudio.Play();
+                    hasPlayedScreamer = true;  // Устанавливаем флаг, чтобы звук не повторялся
+
+                    // Удаляем зомби с задержкой, равной длине аудиоклипа
+                    Destroy(gameObject, scrimerAudio.clip.length);
                 }
-                else if (direction.x < 0)
-                {
-                    transform.localScale = new Vector3(-1, 1, 1);  // Повернуть влево
-                }
+
+                return;  // Завершаем выполнение метода
             }
-            else
+
+            // Если дистанция больше stopDistance, зомби продолжает двигаться
+            Vector3 direction = (player.position - transform.position).normalized;
+            moveDirection = direction * speed;
+            isMoving = true;
+
+            // Управление анимацией движения
+            animator.SetFloat("Speed", isMoving ? speed : 0);
+
+            // Поворот зомби лицом к игроку
+            if (isMoving)
             {
-                // Если расстояние меньше 2 метров, зомби останавливается
-                moveDirection = Vector3.zero;  // Останавливаем движение
-                animator.SetFloat("Speed", 0);  // Устанавливаем скорость анимации на 0 (ожидание)
-                Debug.Log("Зомби остановился");
+                Vector3 lookDirection = player.position - transform.position;
+                if (lookDirection.x > 0)
+                {
+                    transform.localScale = new Vector3(1, 1, 1);
+                }
+                else if (lookDirection.x < 0)
+                {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                }
             }
         }
 
-        // Применяем движение по горизонтали (moveDirection) и падение (velocity)
-        Vector3 move = moveDirection * Time.deltaTime;  // Горизонтальное движение
-        controller.Move(move + velocity * Time.deltaTime);  // Применяем и горизонтальное движение, и падение
+        // Применяем движение зомби
+        controller.Move((moveDirection + velocity) * Time.deltaTime);
     }
 }
