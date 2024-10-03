@@ -81,14 +81,17 @@ public class ZombieController : MonoBehaviour
             // Поворот зомби лицом к игроку
             if (isMoving)
             {
-                Vector3 lookDirection = player.position - transform.position;
-                if (lookDirection.x > 0)
+                Vector3 lookDirection = (player.position - transform.position).normalized;
+                lookDirection.y = 0;  // Обнуляем ось Y, чтобы зомби не наклонялся вверх или вниз
+
+                // Если направление движения не равно нулю
+                if (lookDirection != Vector3.zero)
                 {
-                    transform.localScale = new Vector3(1, 1, 1);
-                }
-                else if (lookDirection.x < 0)
-                {
-                    transform.localScale = new Vector3(-1, 1, 1);
+                    // Рассчитываем желаемое вращение
+                    Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+
+                    // Плавно поворачиваем зомби к игроку
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // 5f - скорость поворота
                 }
             }
         }
