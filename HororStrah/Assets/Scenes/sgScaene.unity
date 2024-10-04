@@ -657,7 +657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &317363625
 RectTransform:
   m_ObjectHideFlags: 0
@@ -809,6 +809,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &466972355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2818631016347784500, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+  m_PrefabInstance: {fileID: 1757678047}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &466972359
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466972355}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6274059880062070182, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
 --- !u!1 &476287067 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 56b0c14fc4bfb3e469bbc9f8daae5c04, type: 3}
@@ -834,7 +861,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.2
+  m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1815,27 +1842,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
   m_PrefabInstance: {fileID: 1757678047}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1118809613
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1118809611}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.027771, y: 4.2697253, z: 1.1105647}
-  m_Center: {x: 0.23773575, y: 1.6348629, z: -0.07540202}
 --- !u!95 &1118809614
 Animator:
   serializedVersion: 5
@@ -1872,6 +1878,27 @@ MonoBehaviour:
   doorAnimator: {fileID: 1118809614}
   codePanel: {fileID: 317363624}
   cameraController: {fileID: 1984652869}
+--- !u!65 &1118809616
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118809611}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.5117836, y: 4.6641235, z: 0.9448848}
+  m_Center: {x: 0.019826889, y: 1.8320618, z: 0.027557611}
 --- !u!1 &1361679798 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a558a45df7392c149be49bb04be15ffd, type: 3}
@@ -2704,6 +2731,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7302565228375743124, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -7302565228375743124, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: -1270895557828155520, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 89.98021
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
       propertyPath: m_Name
       value: woodenDoor_01_v1_ANIM
@@ -2717,14 +2756,46 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1118809613}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1118809614}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1118809615}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1118809616}
+    - targetCorrespondingSourceObject: {fileID: 7347129260035420485, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1797305977}
+    - targetCorrespondingSourceObject: {fileID: -2818631016347784500, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 466972359}
   m_SourcePrefab: {fileID: 100100000, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+--- !u!1 &1797305975 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7347129260035420485, guid: ab3bce958c82c4143a5fbc97f5b302f8, type: 3}
+  m_PrefabInstance: {fileID: 1757678047}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1797305977
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1797305975}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.018892441, y: 0.006295731, z: 0.041913785}
+  m_Center: {x: -0.008281708, y: -0.0002211073, z: 0.0013740492}
 --- !u!1 &1824292035
 GameObject:
   m_ObjectHideFlags: 0
@@ -3056,7 +3127,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 90
+  field of view: 60.8
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

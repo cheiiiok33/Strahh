@@ -71,20 +71,9 @@ public class DoorInteractionWithButtons : MonoBehaviour
     // Открытие или закрытие двери
     private void ToggleDoor()
     {
-        if (!isOpen)
-        {
-            doorAnimator.SetFloat("Speed", 1);  // Запускаем анимацию открытия
-            doorAnimator.Play("DoorClose", 0, 0);  // Проигрываем анимацию с начала
-            Debug.Log("Дверь открыта.");
-        }
-        else
-        {
-            doorAnimator.SetFloat("Speed", -1);  // Запускаем анимацию закрытия
-            doorAnimator.Play("DoorClose", 0, 1);  // Проигрываем анимацию с конца
-            Debug.Log("Дверь закрыта.");
-        }
-
         isOpen = !isOpen;
+        doorAnimator.SetBool("isOpen", isOpen);
+
     }
 
     // Открытие панели и отключение управления камерой
