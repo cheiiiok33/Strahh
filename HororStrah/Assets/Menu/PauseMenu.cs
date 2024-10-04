@@ -30,6 +30,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false); // Скрыть меню паузы
         Time.timeScale = 1f; // Возобновить время
         PauseGame = false; // Изменить состояние паузы на false
+        Debug.Log("Resume");
 
         // Включить управление камерой
         if (cameraController != null)
