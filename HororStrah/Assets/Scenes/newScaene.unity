@@ -1944,11 +1944,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cb6955f613ddbe49a22889322f8bb6d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ad84bf347624be418f67fb30fb49339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sensitivity: 2
-  maxYangle: 45
+  maxYangle: 80
 --- !u!1001 &976047403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4108,6 +4108,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 756598273}
     m_Modifications:
+    - target: {fileID: 4016370732511598936, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4016370732511598936, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4016370732511598936, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4642410149462741037, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
       propertyPath: m_Name
       value: Slot

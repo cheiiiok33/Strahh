@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   amount: 0
-  isEmpty: 0
+  isEmpty: 1
   iconGO: {fileID: 0}
   itemAmountText: {fileID: 0}
 --- !u!1 &8742051366495310762
