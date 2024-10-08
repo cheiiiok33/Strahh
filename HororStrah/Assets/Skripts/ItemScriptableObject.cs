@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum ItemType {Default, Food, Weapon, Instrument, Note}
-public class ItemSkriptableObject : ScriptableObject
+public class ItemScriptableObject : ScriptableObject
 {
     public string itemName;
     public int maximumAmount;

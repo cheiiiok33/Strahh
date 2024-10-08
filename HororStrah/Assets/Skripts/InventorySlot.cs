@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    public ItemSkriptableObject item;
+    public ItemScriptableObject item;
     public int amount;
     public bool isEmpty = true;
     public GameObject iconGO;

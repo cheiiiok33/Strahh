@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class InventoryManager : MonoBehaviour
 {
     public GameObject UIPanel;
@@ -11,6 +13,7 @@ public class InventoryManager : MonoBehaviour
     public bool isOpened;
     public float reachDistance = 3f;
     private Camera mainCamera;
+  
 
     private void Awake()
     {
@@ -49,7 +52,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, reachDistance))
@@ -61,19 +64,29 @@ public class InventoryManager : MonoBehaviour
                     AddItem(hit.collider.gameObject.GetComponent<Item>().item, hit.collider.gameObject.GetComponent<Item>().amount);
                     Destroy(hit.collider.gameObject);
                 }
+            }
+
+            Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.green);
+
         }
+        else
+        {
+            Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.red);
         }
     }
 
-    private void AddItem(ItemSkriptableObject _item, int _amount)
+    private void AddItem(ItemScriptableObject _item, int _amount)
     {
         foreach (InventorySlot slot in slots)
         {
             if (slot.item == _item)
             {
-                slot.amount += _amount;
-                slot.itemAmountText.text = slot.amount.ToString();
-                return;
+                if (slot.amount + _amount <= _item.maximumAmount)
+                {
+                    slot.amount += _amount;
+                    slot.itemAmountText.text = slot.amount.ToString();
+                }
+                break;
             }
 
         }
