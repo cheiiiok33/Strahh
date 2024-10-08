@@ -61,14 +61,7 @@ public class InventoryManager : MonoBehaviour
                     AddItem(hit.collider.gameObject.GetComponent<Item>().item, hit.collider.gameObject.GetComponent<Item>().amount);
                     Destroy(hit.collider.gameObject);
                 }
-            }
-
-            Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.green);
-
         }
-        else
-        {
-            Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.red);
         }
     }
 
