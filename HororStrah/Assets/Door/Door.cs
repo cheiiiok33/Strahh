@@ -4,7 +4,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
 {
     public Animator doorAnimator;   // Аниматор двери
     [SerializeField] private GameObject codePanel;    // Панель с кнопками для ввода кода
-    [SerializeField] private GameObject cameraController;  // Объект, отвечающий за управление камерой (скрипт)
+    [SerializeField] private CameraController cameraController;  // Ссылка на скрипт управления камерой
     private string enteredCode = "";  // Введённый игроком код
     private string correctCode = "322";  // Правильный код для открытия двери
     private bool isPlayerNearby = false;  // Флаг для проверки, рядом ли игрок с дверью
@@ -73,7 +73,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
     {
         isOpen = !isOpen;
         doorAnimator.SetBool("isOpen", isOpen);
-
     }
 
     // Открытие панели и отключение управления камерой
@@ -82,7 +81,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
         codePanel.SetActive(true);  // Показываем панель
         if (cameraController != null)
         {
-            cameraController.SetActive(false);  // Отключаем управление камерой
+            cameraController.enabled = false;  // Отключаем управление камерой
         }
         isPanelOpen = true;  // Панель открыта
         Debug.Log("Панель открыта. Управление камерой отключено.");
@@ -94,7 +93,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
         codePanel.SetActive(false);  // Скрываем панель
         if (cameraController != null)
         {
-            cameraController.SetActive(true);  // Включаем управление камерой
+            cameraController.enabled = true;  // Включаем управление камерой
         }
         isPanelOpen = false;  // Панель закрыта
         Debug.Log("Панель закрыта. Управление камерой включено.");

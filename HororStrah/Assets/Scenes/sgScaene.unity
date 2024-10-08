@@ -1877,7 +1877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorAnimator: {fileID: 1118809614}
   codePanel: {fileID: 317363624}
-  cameraController: {fileID: 1984652869}
+  cameraController: {fileID: 1984652874}
 --- !u!65 &1118809616
 BoxCollider:
   m_ObjectHideFlags: 0
