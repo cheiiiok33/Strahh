@@ -10,11 +10,15 @@ public class DoorInteractionWithButtons : MonoBehaviour
     private bool isPlayerNearby = false;  // Флаг для проверки, рядом ли игрок с дверью
     private bool isOpen = false;  // Состояние двери (открыта или закрыта)
     private bool isPanelOpen = false;  // Флаг состояния панели
+    private Collider doorCollider;  // Коллайдер двери
 
     void Start()
     {
         // Убедитесь, что панель изначально скрыта
         codePanel.SetActive(false);
+
+        // Получаем коллайдер двери
+        doorCollider = GetComponent<Collider>();
 
         if (doorAnimator == null)
         {
@@ -73,6 +77,12 @@ public class DoorInteractionWithButtons : MonoBehaviour
     {
         isOpen = !isOpen;
         doorAnimator.SetBool("isOpen", isOpen);
+
+        // Отключаем коллайдер, когда дверь открыта
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = !isOpen;  // Включаем коллайдер, когда дверь закрыта
+        }
     }
 
     // Открытие панели и отключение управления камерой
