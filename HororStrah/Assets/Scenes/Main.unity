@@ -822,16 +822,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8742051366495310762, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
+      propertyPath: m_Name
+      value: Icon
+      objectReference: {fileID: 0}
     - target: {fileID: 8750085153677288164, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
       propertyPath: iconGO
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750085153677288164, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
+      propertyPath: isEmpty
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8750085153677288164, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
       propertyPath: itemAmountText
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5660707765250806705, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a64a02aa406a2fc4d8f6033e978f9f4a, type: 3}
@@ -4972,7 +4981,7 @@ PrefabInstance:
     - target: {fileID: 361640219489659604, guid: 1d693acb6b0ef104494517b07d6504bb, type: 3}
       propertyPath: cameraController
       value: 
-      objectReference: {fileID: 1440819661}
+      objectReference: {fileID: 1440819663}
     - target: {fileID: 6365205286095471052, guid: 1d693acb6b0ef104494517b07d6504bb, type: 3}
       propertyPath: m_Size.y
       value: 4.697442
