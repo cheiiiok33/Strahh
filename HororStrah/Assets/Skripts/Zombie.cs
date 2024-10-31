@@ -16,6 +16,8 @@ public class ZombieController : MonoBehaviour
     public AudioSource scrimerAudio;  // Компонент для воспроизведения звука
     private bool hasPlayedScreamer = false;  // Флаг, чтобы скример сработал один раз
 
+    public LayerMask obstacleLayer;  // Слой для проверки препятствий
+
     void Start()
     {
         // Получаем компонент CharacterController
@@ -53,6 +55,14 @@ public class ZombieController : MonoBehaviour
         if (player != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+            // Проверка на наличие препятствий между зомби и игроком
+            if (!IsPlayerVisible())
+            {
+                // Если есть препятствие, зомби останавливается и переходит в состояние Idle
+                StopMoving();
+                return;
+            }
 
             // Если расстояние до игрока меньше stopDistance, зомби исчезает
             if (distanceToPlayer <= stopDistance)
@@ -98,5 +108,26 @@ public class ZombieController : MonoBehaviour
 
         // Применяем движение зомби
         controller.Move((moveDirection + velocity) * Time.deltaTime);
+    }
+
+    // Проверка на наличие препятствий между зомби и игроком
+    private bool IsPlayerVisible()
+    {
+        // Проверяем линию от зомби до игрока на наличие препятствий
+        if (Physics.Linecast(transform.position, player.position, obstacleLayer))
+        {
+            return false;  // Если есть препятствие, игрок не виден
+        }
+
+        return true;  // Если препятствий нет, игрок виден
+    }
+
+    // Метод для остановки движения и перехода в Idle
+    private void StopMoving()
+    {
+        isMoving = false;
+        moveDirection = Vector3.zero;
+        animator.SetFloat("Speed", 0);  // Устанавливаем анимацию Idle
+        Debug.Log("Зомби остановился из-за препятствия.");
     }
 }
