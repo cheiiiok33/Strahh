@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public ItemSkriptableObject item;
+    public ItemScriptableObject item;
     public int amount;
 }
