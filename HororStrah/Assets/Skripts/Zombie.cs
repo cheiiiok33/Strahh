@@ -1,51 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class ZombieController : MonoBehaviour
 {
     public Animator animator;
-    public float speed = 2f;  // Скорость движения зомби
-    public Transform player;  // Игрок (цель для зомби)
-    public float gravity = -9.81f;  // Сила гравитации
-    public float stopDistance = 2f;  // Расстояние до игрока, на котором зомби исчезнет
-    private CharacterController controller;  // Ссылка на CharacterController
-    private Vector3 velocity;  // Скорость падения
-    private Vector3 moveDirection;  // Направление движения зомби
-    private bool isMoving;  // Флаг, движется ли зомби
-    public AudioSource scrimerAudio;  // Компонент для воспроизведения звука
-    private bool hasPlayedScreamer = false;  // Флаг, чтобы скример сработал один раз
+    public float walkSpeed = 4f;
+    public float chaseSpeed = 7f;
+    public Transform player;
+    public float gravity = -9.81f;
+    public float stopDistance = 2f;
+    private CharacterController controller;
+    private Vector3 velocity;
+    private Vector3 moveDirection;
+    private bool isMoving;
+    public AudioSource scrimerAudio;
+    private bool hasPlayedScreamer = false;
+    public LayerMask obstacleLayer;
 
-    public LayerMask obstacleLayer;  // Слой для проверки препятствий
+    public float detectionRange = 10f;
+    public float wanderRadius = 10f;
+    public float minWanderWaitTime = 1f;
+    public float maxWanderWaitTime = 2f;
+
+    private Vector3 wanderTarget;
+    private bool isWandering = false;
+    private bool isChasing = false;
+    private float waitTimer = 0f;
+    private Vector3 startPosition;
 
     void Start()
     {
-        // Получаем компонент CharacterController
         controller = GetComponent<CharacterController>();
-
-        // Получаем компонент Animator, если он не был установлен вручную
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
+        startPosition = transform.position;
+        SetNewWanderTarget();
 
-        // Убеждаемся, что скример не воспроизводится в начале
         if (scrimerAudio == null || scrimerAudio.clip == null)
         {
-            Debug.LogError("Не установлен AudioSource или аудиоклип для скримера!");
-        }
-        else
-        {
-            scrimerAudio.Stop();  // Останавливаем, если вдруг запустился по ошибке
+            Debug.LogWarning("Скример аудио не настроен!");
         }
     }
 
     void Update()
     {
-        // Применение гравитации
         if (controller.isGrounded)
         {
-            velocity.y = -2f; // Чтобы зомби был "приклеен" к земле
+            velocity.y = -2f;
         }
         else
         {
@@ -56,78 +59,135 @@ public class ZombieController : MonoBehaviour
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            // Проверка на наличие препятствий между зомби и игроком
-            if (!IsPlayerVisible())
+            if (IsPlayerVisible() && distanceToPlayer <= detectionRange)
             {
-                // Если есть препятствие, зомби останавливается и переходит в состояние Idle
-                StopMoving();
-                return;
+                isChasing = true;
+                isWandering = false;
+                ChasePlayer();
+                Debug.Log("Преследую игрока");
+            }
+            else
+            {
+                isChasing = false;
+                Wander();
+                Debug.Log("Патрулирую");
             }
 
-            // Если расстояние до игрока меньше stopDistance, зомби исчезает
-            if (distanceToPlayer <= stopDistance)
+            if (distanceToPlayer <= stopDistance && isChasing)
             {
-                if (!hasPlayedScreamer)
+                if (!hasPlayedScreamer && scrimerAudio != null)
                 {
-                    // Воспроизводим скример перед удалением зомби
                     scrimerAudio.Play();
-                    hasPlayedScreamer = true;  // Устанавливаем флаг, чтобы звук не повторялся
-
-                    // Удаляем зомби с задержкой, равной длине аудиоклипа
+                    hasPlayedScreamer = true;
                     Destroy(gameObject, scrimerAudio.clip.length);
                 }
-
-                return;  // Завершаем выполнение метода
-            }
-
-            // Если дистанция больше stopDistance, зомби продолжает двигаться
-            Vector3 direction = (player.position - transform.position).normalized;
-            moveDirection = direction * speed;
-            isMoving = true;
-
-            // Управление анимацией движения
-            animator.SetFloat("Speed", isMoving ? speed : 0);
-
-            // Поворот зомби лицом к игроку
-            if (isMoving)
-            {
-                Vector3 lookDirection = (player.position - transform.position).normalized;
-                lookDirection.y = 0;  // Обнуляем ось Y, чтобы зомби не наклонялся вверх или вниз
-
-                // Если направление движения не равно нулю
-                if (lookDirection != Vector3.zero)
-                {
-                    // Рассчитываем желаемое вращение
-                    Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-
-                    // Плавно поворачиваем зомби к игроку
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // 5f - скорость поворота
-                }
+                return;
             }
         }
 
-        // Применяем движение зомби
         controller.Move((moveDirection + velocity) * Time.deltaTime);
+        animator.SetFloat("Speed", moveDirection.magnitude);
+
+        // Отладочная информация
+        Debug.Log($"Позиция: {transform.position}, Цель: {wanderTarget}, Скорость: {moveDirection.magnitude}");
     }
 
-    // Проверка на наличие препятствий между зомби и игроком
+    private void ChasePlayer()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0;
+        moveDirection = direction * chaseSpeed;
+
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+                                                Quaternion.LookRotation(direction),
+                                                Time.deltaTime * 5f);
+        }
+    }
+
+    private void Wander()
+    {
+        if (!isWandering)
+        {
+            SetNewWanderTarget();
+            isWandering = true;
+            waitTimer = Random.Range(minWanderWaitTime, maxWanderWaitTime);
+            Debug.Log($"Новая точка патрулирования: {wanderTarget}");
+        }
+
+        if (waitTimer > 0)
+        {
+            waitTimer -= Time.deltaTime;
+            moveDirection = Vector3.zero;
+            return;
+        }
+
+        Vector3 directionToTarget = wanderTarget - transform.position;
+        directionToTarget.y = 0;
+
+        if (directionToTarget.magnitude > 0.5f)
+        {
+            moveDirection = directionToTarget.normalized * walkSpeed;
+
+            if (moveDirection != Vector3.zero)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation,
+                                                    Quaternion.LookRotation(moveDirection),
+                                                    Time.deltaTime * 5f);
+            }
+        }
+        else
+        {
+            isWandering = false;
+        }
+    }
+
+    private void SetNewWanderTarget()
+    {
+        Vector2 randomCircle = Random.insideUnitCircle * wanderRadius;
+        wanderTarget = startPosition + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+        // Визуализация точки патрулирования
+        Debug.DrawLine(transform.position, wanderTarget, Color.yellow, 2f);
+    }
+
     private bool IsPlayerVisible()
     {
-        // Проверяем линию от зомби до игрока на наличие препятствий
-        if (Physics.Linecast(transform.position, player.position, obstacleLayer))
+        Vector3 directionToPlayer = player.position - transform.position;
+        float distanceToPlayer = directionToPlayer.magnitude;
+
+        RaycastHit hit;
+        Vector3 startPos = transform.position + Vector3.up;
+        Vector3 endPos = player.position + Vector3.up;
+
+        if (Physics.Raycast(startPos, directionToPlayer.normalized, out hit, distanceToPlayer, obstacleLayer))
         {
-            return false;  // Если есть препятствие, игрок не виден
+            Debug.DrawLine(startPos, hit.point, Color.red, 0.1f);
+            return false;
         }
 
-        return true;  // Если препятствий нет, игрок виден
+        Debug.DrawLine(startPos, endPos, Color.green, 0.1f);
+        return true;
     }
 
-    // Метод для остановки движения и перехода в Idle
-    private void StopMoving()
+    void OnDrawGizmosSelected()
     {
-        isMoving = false;
-        moveDirection = Vector3.zero;
-        animator.SetFloat("Speed", 0);  // Устанавливаем анимацию Idle
-        Debug.Log("Зомби остановился из-за препятствия.");
+        // Визуализация радиусов в редакторе
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        if (startPosition != Vector3.zero)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(startPosition, wanderRadius);
+        }
+
+        if (isWandering)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, wanderTarget);
+            Gizmos.DrawSphere(wanderTarget, 0.5f);
+        }
     }
 }
