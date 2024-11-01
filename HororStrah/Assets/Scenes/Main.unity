@@ -8531,7 +8531,7 @@ Transform:
   m_GameObject: {fileID: 1789725184}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -70.7, y: 0, z: -14.099311}
+  m_LocalPosition: {x: -72.15, y: 0, z: -14.099311}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8724,7 +8724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1817079411}
-  walkSpeed: 4
+  walkSpeed: 5
   chaseSpeed: 7
   player: {fileID: 148962249}
   gravity: -9.81
