@@ -49,6 +49,11 @@ public class InventoryManager : MonoBehaviour
             {
                 UIPanel.SetActive(false);
                 crosshair.SetActive(true);
+                
+                if(UIManager.instance != null)
+                {
+                    UIManager.instance.HideNoteText();
+                }
             }
         }
 
