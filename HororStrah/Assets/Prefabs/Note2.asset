@@ -17,4 +17,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 4764078820648954900, guid: a1405e7a56c4c1e4fa83da189841ed30, type: 3}
   icon: {fileID: 21300000, guid: dda010470ecb5cd4c9f4cda4aa7b5953, type: 3}
   itemType: 4
-  itemDescription: 
+  itemDescription: "\u044D\u0442\u043E \u0445\u0437 \u043A\u0430\u043A\u0430\u044F
+    2"

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour
 {
@@ -24,4 +25,5 @@ public class InventorySlot : MonoBehaviour
         iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
         iconGO.GetComponent<Image>().sprite = icon;
     }
+    
 }
