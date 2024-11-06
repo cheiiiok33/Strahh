@@ -1,103 +1,122 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 
 public class ZombieController : MonoBehaviour
 {
-    public Animator animator;
+    [Header("Основные настройки")]
     public float walkSpeed = 4f;
     public float chaseSpeed = 7f;
-    public Transform player;
-    public float gravity = -9.81f;
     public float stopDistance = 2f;
-    private CharacterController controller;
-    private Vector3 velocity;
-    private Vector3 moveDirection;
-    private bool isMoving;
-    public AudioSource scrimerAudio;
-    private bool hasPlayedScreamer = false;
-    public LayerMask obstacleLayer;
+    public Transform player;
 
+    [Header("Настройки патрулирования")]
     public float detectionRange = 10f;
     public float wanderRadius = 10f;
     public float minWanderWaitTime = 1f;
     public float maxWanderWaitTime = 2f;
 
+    [Header("Компоненты")]
+    public Animator animator;
+    public AudioSource scrimerAudio;
+    public LayerMask obstacleLayer;
+
+    private NavMeshAgent agent;
     private Vector3 wanderTarget;
+    private Vector3 startPosition;
     private bool isWandering = false;
     private bool isChasing = false;
+    private bool hasPlayedScreamer = false;
     private float waitTimer = 0f;
-    private Vector3 startPosition;
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        // Получаем и настраиваем NavMeshAgent
+        agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.speed = walkSpeed;
+            agent.stoppingDistance = stopDistance;
+        }
+        else
+        {
+            Debug.LogError("NavMeshAgent не найден на объекте!");
+            enabled = false;
+            return;
+        }
+
+        // Проверяем аниматор
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
+
+        // Сохраняем начальную позицию
         startPosition = transform.position;
         SetNewWanderTarget();
 
+        // Проверяем аудио
         if (scrimerAudio == null || scrimerAudio.clip == null)
         {
             Debug.LogWarning("Скример аудио не настроен!");
+        }
+
+        // Проверяем игрока
+        if (player == null)
+        {
+            Debug.LogError("Не указан объект игрока!");
+            enabled = false;
+            return;
         }
     }
 
     void Update()
     {
-        if (controller.isGrounded)
+        if (player == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        // Проверяем видимость и расстояние до игрока
+        if (IsPlayerVisible() && distanceToPlayer <= detectionRange)
         {
-            velocity.y = -2f;
+            isChasing = true;
+            isWandering = false;
+            ChasePlayer();
         }
         else
         {
-            velocity.y += gravity * Time.deltaTime;
+            isChasing = false;
+            Wander();
         }
 
-        if (player != null)
+        // Проверяем расстояние для скримера
+        if (distanceToPlayer <= stopDistance && isChasing)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-            if (IsPlayerVisible() && distanceToPlayer <= detectionRange)
+            if (!hasPlayedScreamer && scrimerAudio != null)
             {
-                isChasing = true;
-                isWandering = false;
-                ChasePlayer();
-                Debug.Log("Преследую игрока");
+                scrimerAudio.Play();
+                hasPlayedScreamer = true;
+                Destroy(gameObject, scrimerAudio.clip.length);
             }
-            else
-            {
-                isChasing = false;
-                Wander();
-                Debug.Log("Патрулирую");
-            }
-
-            if (distanceToPlayer <= stopDistance && isChasing)
-            {
-                if (!hasPlayedScreamer && scrimerAudio != null)
-                {
-                    scrimerAudio.Play();
-                    hasPlayedScreamer = true;
-                    Destroy(gameObject, scrimerAudio.clip.length);
-                }
-                return;
-            }
+            agent.isStopped = true;
+            return;
         }
 
-        controller.Move((moveDirection + velocity) * Time.deltaTime);
-        animator.SetFloat("Speed", moveDirection.magnitude);
-
-        // Отладочная информация
-        Debug.Log($"Позиция: {transform.position}, Цель: {wanderTarget}, Скорость: {moveDirection.magnitude}");
+        // Обновляем анимацию
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", agent.velocity.magnitude);
+        }
     }
 
     private void ChasePlayer()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-        moveDirection = direction * chaseSpeed;
+        agent.isStopped = false;
+        agent.speed = chaseSpeed;
+        agent.SetDestination(player.position);
 
+        // Поворот в сторону игрока
+        Vector3 direction = (player.position - transform.position).normalized;
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation,
@@ -108,36 +127,26 @@ public class ZombieController : MonoBehaviour
 
     private void Wander()
     {
+        agent.speed = walkSpeed;
+
         if (!isWandering)
         {
             SetNewWanderTarget();
             isWandering = true;
             waitTimer = Random.Range(minWanderWaitTime, maxWanderWaitTime);
-            Debug.Log($"Новая точка патрулирования: {wanderTarget}");
         }
 
         if (waitTimer > 0)
         {
             waitTimer -= Time.deltaTime;
-            moveDirection = Vector3.zero;
+            agent.isStopped = true;
             return;
         }
 
-        Vector3 directionToTarget = wanderTarget - transform.position;
-        directionToTarget.y = 0;
+        agent.isStopped = false;
+        agent.SetDestination(wanderTarget);
 
-        if (directionToTarget.magnitude > 0.5f)
-        {
-            moveDirection = directionToTarget.normalized * walkSpeed;
-
-            if (moveDirection != Vector3.zero)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation,
-                                                    Quaternion.LookRotation(moveDirection),
-                                                    Time.deltaTime * 5f);
-            }
-        }
-        else
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             isWandering = false;
         }
@@ -148,12 +157,17 @@ public class ZombieController : MonoBehaviour
         Vector2 randomCircle = Random.insideUnitCircle * wanderRadius;
         wanderTarget = startPosition + new Vector3(randomCircle.x, 0, randomCircle.y);
 
-        // Визуализация точки патрулирования
-        Debug.DrawLine(transform.position, wanderTarget, Color.yellow, 2f);
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(wanderTarget, out hit, wanderRadius, NavMesh.AllAreas))
+        {
+            wanderTarget = hit.position;
+        }
     }
 
     private bool IsPlayerVisible()
     {
+        if (player == null) return false;
+
         Vector3 directionToPlayer = player.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
 
@@ -163,26 +177,26 @@ public class ZombieController : MonoBehaviour
 
         if (Physics.Raycast(startPos, directionToPlayer.normalized, out hit, distanceToPlayer, obstacleLayer))
         {
-            Debug.DrawLine(startPos, hit.point, Color.red, 0.1f);
             return false;
         }
 
-        Debug.DrawLine(startPos, endPos, Color.green, 0.1f);
         return true;
     }
 
     void OnDrawGizmosSelected()
     {
-        // Визуализация радиусов в редакторе
+        // Визуализация радиуса обнаружения
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
+        // Визуализация радиуса патрулирования
         if (startPosition != Vector3.zero)
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(startPosition, wanderRadius);
         }
 
+        // Визуализация текущей цели
         if (isWandering)
         {
             Gizmos.color = Color.red;
