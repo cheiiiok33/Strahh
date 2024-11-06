@@ -2,18 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class InventoryManager : MonoBehaviour
 {
     public GameObject UIPanel;
     public GameObject crosshair;
     public Transform inventoryPanel;
-    public List <InventorySlot> slots = new List <InventorySlot> ();
+    public List<InventorySlot> slots = new List<InventorySlot>();
     public bool isOpened;
     public float reachDistance = 3f;
     private Camera mainCamera;
-  
 
     private void Awake()
     {
@@ -34,14 +31,13 @@ public class InventoryManager : MonoBehaviour
         UIPanel.SetActive(false);
     }
 
-    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             isOpened = !isOpened;
-            if(isOpened) 
-            { 
+            if (isOpened)
+            {
                 UIPanel.SetActive(true);
                 crosshair.SetActive(false);
             }
@@ -49,8 +45,8 @@ public class InventoryManager : MonoBehaviour
             {
                 UIPanel.SetActive(false);
                 crosshair.SetActive(true);
-                
-                if(UIManager.instance != null)
+
+                if (UIManager.instance != null)
                 {
                     UIManager.instance.HideNoteText();
                 }
@@ -72,7 +68,6 @@ public class InventoryManager : MonoBehaviour
             }
 
             Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.green);
-
         }
         else
         {
@@ -82,6 +77,22 @@ public class InventoryManager : MonoBehaviour
 
     private void AddItem(ItemScriptableObject _item, int _amount)
     {
+        // Проверяем, является ли предмет запиской и добавляем время
+        if (_item is NoteItem)
+        {
+            TimerController timerController = FindObjectOfType<TimerController>();
+            if (timerController != null)
+            {
+                timerController.AddTime(60f);
+                Debug.Log($"Подобрана записка: {_item.itemName}. Добавлено 60 секунд.");
+            }
+            else
+            {
+                Debug.LogWarning("TimerController не найден на сцене!");
+            }
+        }
+
+        // Проверяем, есть ли уже такой предмет в инвентаре
         foreach (InventorySlot slot in slots)
         {
             if (slot.item == _item)
@@ -90,22 +101,27 @@ public class InventoryManager : MonoBehaviour
                 {
                     slot.amount += _amount;
                     slot.itemAmountText.text = slot.amount.ToString();
+                    return; // Выходим из метода, так как предмет уже добавлен
                 }
                 break;
             }
-
         }
+
+        // Если предмет не был добавлен к существующему стаку, ищем пустой слот
         foreach (InventorySlot slot in slots)
         {
-            if (slot.isEmpty == true )
+            if (slot.isEmpty)
             {
                 slot.item = _item;
                 slot.amount = _amount;
                 slot.isEmpty = false;
                 slot.SetIcon(_item.icon);
                 slot.itemAmountText.text = _amount.ToString();
-                break;
+                return;
             }
         }
+
+        // Если мы дошли до этой точки, значит инвентарь полон
+        Debug.LogWarning("Инвентарь полон! Невозможно добавить предмет: " + _item.itemName);
     }
 }

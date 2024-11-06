@@ -2812,7 +2812,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paper
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3383547075887639452, guid: a1405e7a56c4c1e4fa83da189841ed30, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
