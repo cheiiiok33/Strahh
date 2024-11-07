@@ -4,22 +4,22 @@ using System.Collections;
 
 public class ZombieController : MonoBehaviour
 {
-    [Header("Основные параметры")]
+    [Header("РћСЃРЅРѕРІРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹")]
     public float walkSpeed = 4f;
     public float chaseSpeed = 7f;
     public float stopDistance = 2f;
     public Transform player;
 
-    [Header("Параметры патрулирования")]
+    [Header("РџР°СЂР°РјРµС‚СЂС‹ РїР°С‚СЂСѓР»РёСЂРѕРІР°РЅРёСЏ")]
     public float detectionRange = 10f;
     public float wanderRadius = 10f;
     public float minWanderWaitTime = 1f;
     public float maxWanderWaitTime = 2f;
 
-    [Header("Респаун")]
+    [Header("Р РµСЃРїР°СѓРЅ")]
     public float respawnRadius = 20f;
 
-    [Header("Компоненты")]
+    [Header("РљРѕРјРїРѕРЅРµРЅС‚С‹")]
     public Animator animator;
     public AudioSource scrimerAudio;
     public LayerMask obstacleLayer;
@@ -42,7 +42,7 @@ public class ZombieController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("NavMeshAgent не найден на объекте!");
+            Debug.LogError("NavMeshAgent РЅРµ РЅР°Р№РґРµРЅ РЅР° РѕР±СЉРµРєС‚Рµ!");
             enabled = false;
             return;
         }
@@ -57,12 +57,12 @@ public class ZombieController : MonoBehaviour
 
         if (scrimerAudio == null || scrimerAudio.clip == null)
         {
-            Debug.LogWarning("Звуковой клип не назначен!");
+            Debug.LogWarning("Р—РІСѓРєРѕРІРѕР№ РєР»РёРї РЅРµ РЅР°Р·РЅР°С‡РµРЅ!");
         }
 
         if (player == null)
         {
-            Debug.LogError("Не задан объект игрока!");
+            Debug.LogError("РќРµ Р·Р°РґР°РЅ РѕР±СЉРµРєС‚ РёРіСЂРѕРєР°!");
             enabled = false;
             return;
         }
@@ -153,7 +153,6 @@ public class ZombieController : MonoBehaviour
             isWandering = false;
         }
     }
-
     private void SetNewWanderTarget()
     {
         Vector2 randomCircle = Random.insideUnitCircle * wanderRadius;
