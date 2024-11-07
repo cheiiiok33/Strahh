@@ -4,17 +4,20 @@ using System.Collections;
 
 public class ZombieController : MonoBehaviour
 {
-    [Header("Основные настройки")]
+    [Header("Основные параметры")]
     public float walkSpeed = 4f;
     public float chaseSpeed = 7f;
     public float stopDistance = 2f;
     public Transform player;
 
-    [Header("Настройки патрулирования")]
+    [Header("Параметры патрулирования")]
     public float detectionRange = 10f;
     public float wanderRadius = 10f;
     public float minWanderWaitTime = 1f;
     public float maxWanderWaitTime = 2f;
+
+    [Header("Респаун")]
+    public float respawnRadius = 20f;
 
     [Header("Компоненты")]
     public Animator animator;
@@ -31,7 +34,6 @@ public class ZombieController : MonoBehaviour
 
     void Start()
     {
-        // Получаем и настраиваем NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
         if (agent != null)
         {
@@ -45,26 +47,22 @@ public class ZombieController : MonoBehaviour
             return;
         }
 
-        // Проверяем аниматор
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
 
-        // Сохраняем начальную позицию
         startPosition = transform.position;
         SetNewWanderTarget();
 
-        // Проверяем аудио
         if (scrimerAudio == null || scrimerAudio.clip == null)
         {
-            Debug.LogWarning("Скример аудио не настроен!");
+            Debug.LogWarning("Звуковой клип не назначен!");
         }
 
-        // Проверяем игрока
         if (player == null)
         {
-            Debug.LogError("Не указан объект игрока!");
+            Debug.LogError("Не задан объект игрока!");
             enabled = false;
             return;
         }
@@ -76,7 +74,6 @@ public class ZombieController : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // Проверяем видимость и расстояние до игрока
         if (IsPlayerVisible() && distanceToPlayer <= detectionRange)
         {
             isChasing = true;
@@ -89,20 +86,26 @@ public class ZombieController : MonoBehaviour
             Wander();
         }
 
-        // Проверяем расстояние для скримера
         if (distanceToPlayer <= stopDistance && isChasing)
         {
             if (!hasPlayedScreamer && scrimerAudio != null)
             {
                 scrimerAudio.Play();
                 hasPlayedScreamer = true;
-                Destroy(gameObject, scrimerAudio.clip.length);
+
+                PlayerController playerController = player.GetComponent<PlayerController>();
+                if (playerController != null)
+                {
+                    playerController.TakeDamage();
+                }
+
+                StartCoroutine(RespawnAfterScare());
+                return;
             }
             agent.isStopped = true;
             return;
         }
 
-        // Обновляем анимацию
         if (animator != null)
         {
             animator.SetFloat("Speed", agent.velocity.magnitude);
@@ -115,7 +118,6 @@ public class ZombieController : MonoBehaviour
         agent.speed = chaseSpeed;
         agent.SetDestination(player.position);
 
-        // Поворот в сторону игрока
         Vector3 direction = (player.position - transform.position).normalized;
         if (direction != Vector3.zero)
         {
@@ -183,20 +185,46 @@ public class ZombieController : MonoBehaviour
         return true;
     }
 
+    private IEnumerator RespawnAfterScare()
+    {
+        yield return new WaitForSeconds(scrimerAudio.clip.length);
+
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        if (playerController != null && playerController.currentHealth <= 0)
+        {
+            playerController.Die();
+            gameObject.SetActive(false);
+            yield break;
+        }
+
+        Vector3 randomPosition = Random.insideUnitSphere * respawnRadius;
+        randomPosition.y = 0;
+        randomPosition += player.position;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomPosition, out hit, respawnRadius, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+        }
+
+        hasPlayedScreamer = false;
+        isChasing = false;
+        isWandering = false;
+        agent.isStopped = false;
+        startPosition = transform.position;
+    }
+
     void OnDrawGizmosSelected()
     {
-        // Визуализация радиуса обнаружения
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        // Визуализация радиуса патрулирования
         if (startPosition != Vector3.zero)
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(startPosition, wanderRadius);
         }
 
-        // Визуализация текущей цели
         if (isWandering)
         {
             Gizmos.color = Color.red;
