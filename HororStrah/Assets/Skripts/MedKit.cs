@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Medkit Item", menuName = "Inventory/Items/New Medkit Item")]
@@ -7,7 +8,11 @@ public class MedkitItem : ItemScriptableObject
 
     private void OnEnable()
     {
-        itemType = ItemType.Food; // Используем существующий тип Food для аптечки
-        maximumAmount = 2; // Максимальное количество аптечек в слоте
+        itemType = ItemType.Medkit;
+    }
+    public void SetupAsNote(string description)
+    {
+        itemType = ItemType.Medkit;
+        itemDescription = description;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum ItemType {Default, Food, Weapon, Instrument, Note}
+public enum ItemType {Default, Food, Weapon, Instrument, Note, Axe, Medkit}
 public class ItemScriptableObject : ScriptableObject
 {
     public string itemName;
