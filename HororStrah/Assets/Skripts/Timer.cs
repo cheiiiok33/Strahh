@@ -47,9 +47,6 @@ public class TimerController : MonoBehaviour
             return;
         }
 
-        // Блокируем и скрываем курсор
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void Update()
