@@ -120,8 +120,6 @@ public class InventoryManager : MonoBehaviour
                 return;
             }
         }
-
-        // Если мы дошли до этой точки, значит инвентарь полон
         Debug.LogWarning("Инвентарь полон! Невозможно добавить предмет: " + _item.itemName);
     }
 }
