@@ -18,6 +18,7 @@ public class ZombieController : MonoBehaviour
 
     [Header("Респаун")]
     public float respawnRadius = 20f;
+    [SerializeField] private bool enableRespawn = true; // Новая переменная для отключения респауна
 
     [Header("Компоненты")]
     public Animator animator;
@@ -99,7 +100,14 @@ public class ZombieController : MonoBehaviour
                     playerController.TakeDamage();
                 }
 
-                StartCoroutine(RespawnAfterScare());
+                if (enableRespawn)
+                {
+                    StartCoroutine(RespawnAfterScare());
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
                 return;
             }
             agent.isStopped = true;

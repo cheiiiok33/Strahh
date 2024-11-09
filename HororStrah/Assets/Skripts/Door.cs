@@ -1,15 +1,19 @@
 using UnityEngine;
+using TMPro;
 
 public class DoorInteractionWithButtons : MonoBehaviour
 {
     public Animator doorAnimator;
     [SerializeField] private GameObject codePanel;
     [SerializeField] private CameraController cameraController;
+    [SerializeField] private TextMeshProUGUI codeDisplayText;
+
     private string enteredCode = "";
     private string correctCode = "322";
     private bool isPlayerNearby = false;
     private bool isOpen = false;
     private bool isPanelOpen = false;
+    private bool isCodeCorrect = false; // Новый флаг
     private Collider doorCollider;
 
     void Start()
@@ -21,20 +25,31 @@ public class DoorInteractionWithButtons : MonoBehaviour
         {
             doorAnimator = GetComponent<Animator>();
         }
+
+        if (codeDisplayText != null)
+        {
+            codeDisplayText.text = "";
+        }
     }
 
     void Update()
     {
-        // Добавлена проверка !isOpen
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.E) && !isOpen)
+        if (isPlayerNearby && Input.GetKeyDown(KeyCode.E))
         {
-            if (!isPanelOpen)
+            if (isCodeCorrect)
             {
-                OpenCodePanel();
+                ToggleDoor();
             }
-            else
+            else if (!isOpen)
             {
-                CloseCodePanel();
+                if (!isPanelOpen)
+                {
+                    OpenCodePanel();
+                }
+                else
+                {
+                    CloseCodePanel();
+                }
             }
         }
     }
@@ -44,6 +59,21 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (enteredCode.Length < 3)
         {
             enteredCode += number;
+            UpdateCodeDisplay();
+            Debug.Log("Кнопка нажата: " + number);
+        }
+    }
+
+    private void UpdateCodeDisplay()
+    {
+        if (codeDisplayText != null)
+        {
+            codeDisplayText.text = enteredCode;
+            Debug.Log("Текущий код: " + enteredCode);
+        }
+        else
+        {
+            Debug.LogError("codeDisplayText не инициализирован!");
         }
     }
 
@@ -51,12 +81,14 @@ public class DoorInteractionWithButtons : MonoBehaviour
     {
         if (enteredCode == correctCode)
         {
+            isCodeCorrect = true; // Устанавливаем флаг
             ToggleDoor();
             CloseCodePanel();
         }
         else
         {
             enteredCode = "";
+            UpdateCodeDisplay();
             Debug.Log("Неверный код! Попробуйте снова.");
         }
     }
@@ -64,6 +96,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
     public void OnClearCode()
     {
         enteredCode = "";
+        UpdateCodeDisplay();
     }
 
     private void ToggleDoor()
@@ -76,7 +109,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
             doorCollider.enabled = !isOpen;
         }
 
-        // Автоматически закрываем панель при открытии двери
         if (isOpen)
         {
             CloseCodePanel();
@@ -102,7 +134,8 @@ public class DoorInteractionWithButtons : MonoBehaviour
             cameraController.enabled = true;
         }
         isPanelOpen = false;
-        enteredCode = ""; // Очищаем введенный код при закрытии панели
+        enteredCode = "";
+        UpdateCodeDisplay();
         Debug.Log("Панель закрыта. Управление камерой включено.");
     }
 
