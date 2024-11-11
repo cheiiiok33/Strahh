@@ -1,6 +1,5 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 [CreateAssetMenu(fileName = "Medkit Item", menuName = "Inventory/Items/New Medkit Item")]
 public class MedkitItem : ItemScriptableObject
