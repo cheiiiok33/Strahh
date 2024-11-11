@@ -10,6 +10,7 @@ public class MedkitItem : ItemScriptableObject
     {
         itemType = ItemType.Medkit;
     }
+
     public void SetupAsNote(string description)
     {
         itemType = ItemType.Medkit;

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Передвижение")]
+    [Header("Параметры движения")]
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float gravity = -9.81f;
@@ -16,9 +16,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("UI")]
     public GameObject gameOverScreen;
-    public Image[] healthIcons; // Массив иконок здоровья
-    public Color fullHeartColor = Color.white; // Цвет активного сердца
-    public Color emptyHeartColor = new Color(0.5f, 0.5f, 0.5f, 1f); // Серый цвет для неактивного сердца
+    public Image[] healthIcons;
+    public Color fullHeartColor = Color.white;
+    public Color emptyHeartColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -42,10 +42,9 @@ public class PlayerController : MonoBehaviour
             gameOverScreen.SetActive(false);
         }
 
-        // Проверяем наличие иконок здоровья
         if (healthIcons == null || healthIcons.Length == 0)
         {
-            Debug.LogError("Не назначены иконки здоровья!");
+            Debug.LogError("Не установлены иконки здоровья!");
         }
 
         UpdateHealthDisplay();
@@ -95,17 +94,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        UpdateHealthDisplay();
+        Debug.Log($"Игрок вылечен на {amount}. Текущее здоровье: {currentHealth}");
+    }
+
     private void UpdateHealthDisplay()
     {
         if (healthIcons == null) return;
 
-        // Обновляем каждую иконку здоровья
         for (int i = 0; i < healthIcons.Length; i++)
         {
             if (healthIcons[i] != null)
             {
-                // Если индекс меньше текущего здоровья - показываем белое сердце
-                // иначе - серое
                 healthIcons[i].color = i < currentHealth ? fullHeartColor : emptyHeartColor;
             }
         }
@@ -123,7 +126,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Экран проигрыша не назначен!");
+            Debug.LogError("Экран окончания игры не установлен!");
         }
 
         enabled = false;

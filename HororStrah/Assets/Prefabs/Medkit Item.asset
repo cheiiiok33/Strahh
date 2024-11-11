@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Medkit Item
   m_EditorClassIdentifier: 
   itemName: MedKit
-  maximumAmount: 0
-  itemPrefab: {fileID: 0}
-  icon: {fileID: 0}
+  maximumAmount: 1
+  itemPrefab: {fileID: 108584683043209193, guid: 90d02e0cd47f40d42900de037ebcb3d9, type: 3}
+  icon: {fileID: 21300000, guid: 8a0a04f799db2814cbf4b01a5cd69c3d, type: 3}
   itemType: 6
-  itemDescription: 
+  itemDescription: "\u0445\u0437"
   healAmount: 1
