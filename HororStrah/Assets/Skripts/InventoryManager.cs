@@ -12,7 +12,6 @@ public class InventoryManager : MonoBehaviour
     public bool isOpened;
     public float reachDistance = 3f;
     private Camera mainCamera;
-    private Outline _LastOutlineObject;
 
     private void Awake()
     {
@@ -34,7 +33,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     void Update()
-    {
+    { 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             isOpened = !isOpened;
@@ -60,15 +59,7 @@ public class InventoryManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, reachDistance))
         {
-            if (hit.transform.gameObject.CompareTag("Item"))
-            {
-                if(_LastOutlineObject != null)
-                {
-                    _LastOutlineObject.enabled = false;
-                    _LastOutlineObject = hit.transform.gameObject.GetComponent<Outline>();
-                    _LastOutlineObject.enabled = true;
-                }
-            }
+            
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (hit.collider.gameObject.GetComponent<Item>() != null)
@@ -80,6 +71,7 @@ public class InventoryManager : MonoBehaviour
 
             Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.green);
         }
+        
         else
         {
             Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.red);

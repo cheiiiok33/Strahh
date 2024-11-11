@@ -154,6 +154,14 @@ public class DragAndDropItem : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                         itemComponent.amount = oldSlot.amount;
                     }
 
+                    // Очищаем старый слот
+                    oldSlot.item = null;
+                    oldSlot.amount = 0;
+                    oldSlot.isEmpty = true;
+                    oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                    oldSlot.iconGO.GetComponent<Image>().sprite = null;
+                    oldSlot.itemAmountText.text = "";
+
                     // Закрываем текст записки при выбрасывании
                     if (UIManager.instance != null)
                     {
