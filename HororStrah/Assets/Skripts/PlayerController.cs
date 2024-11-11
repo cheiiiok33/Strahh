@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (gameOverScreen != null)
         {

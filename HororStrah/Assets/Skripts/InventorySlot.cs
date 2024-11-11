@@ -45,15 +45,22 @@ public class InventorySlot : MonoBehaviour
                 PlayerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
                 if (playerController != null)
                 {
-                    playerController.Heal(medkit.healAmount);
-                    amount--;
-                    if (amount <= 0)
+                    if (playerController.currentHealth < playerController.maxHealth)
                     {
-                        ClearSlot();
+                        playerController.Heal(medkit.healAmount);
+                        amount--;
+                        if (amount <= 0)
+                        {
+                            ClearSlot();
+                        }
+                        else
+                        {
+                            itemAmountText.text = amount.ToString();
+                        }
                     }
                     else
                     {
-                        itemAmountText.text = amount.ToString();
+                        Debug.Log("Здоровье полное, аптечка не используется.");
                     }
                 }
             }
