@@ -3,8 +3,9 @@ using UnityEngine;
 public class DoorInteractionWithRaycast : MonoBehaviour
 {
     public Animator doorAnimator;
-    [SerializeField] private Camera playerCamera;
     private bool isOpen = false;
+    private bool playerInTrigger = false;
+    public KeyCode interactionKey = KeyCode.E;
 
     void Start()
     {
@@ -13,26 +14,33 @@ public class DoorInteractionWithRaycast : MonoBehaviour
             doorAnimator = GetComponent<Animator>();
         }
 
-        if (playerCamera == null)
-        {
-            Debug.LogError("Player camera is not assigned!");
-        }
+        // Убедимся, что дверь закрыта при старте
+        doorAnimator.SetBool("Open", false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && playerCamera != null)
+        if (playerInTrigger && Input.GetKeyDown(interactionKey))
         {
-            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-            RaycastHit hit;
+            ToggleDoor();
+        }
+    }
 
-            if (Physics.Raycast(ray, out hit, 3f)) // 3f - максимальная дистанция рейкаста
-            {
-                if (hit.collider.CompareTag("InteractableDoor"))
-                {
-                    ToggleDoor();
-                }
-            }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = true;
+            Debug.Log("Игрок в зоне двери");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = false;
+            Debug.Log("Игрок вышел из зоны двери");
         }
     }
 
@@ -40,5 +48,6 @@ public class DoorInteractionWithRaycast : MonoBehaviour
     {
         isOpen = !isOpen;
         doorAnimator.SetBool("isOpen", isOpen);
+        Debug.Log($"Переключение двери. isOpen = {isOpen}");
     }
 }

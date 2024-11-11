@@ -1,19 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool PauseGame; // Статическая переменная для отслеживания состояния паузы
-    public GameObject pauseMenu; // Объект меню паузы
-    public MonoBehaviour cameraController; // Ссылка на скрипт управления камерой
+    public static bool PauseGame;
+    public GameObject pauseMenu;
+    public CameraController cameraController; // Изменено на правильное имя скрипта
+
+    void Start()
+    {
+        // Автоматически найти скрипт камеры, если он не назначен
+        if (cameraController == null)
+        {
+            cameraController = Camera.main.GetComponent<CameraController>();
+        }
+        PauseGame = false;
+        pauseMenu.SetActive(false);
+    }
 
     void Update()
     {
-        // Проверка нажатия клавиши Escape для паузы/возобновления игры
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            Debug.Log("Current PauseGame state: " + PauseGame);
             if (PauseGame)
             {
                 Resume();
@@ -27,42 +36,49 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenu.SetActive(false); // Скрыть меню паузы
-        Time.timeScale = 1f; // Возобновить время
-        PauseGame = false; // Изменить состояние паузы на false
-        Debug.Log("Resume");
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        PauseGame = false;
+        Debug.Log("Resume - PauseGame: " + PauseGame);
 
-        // Включить управление камерой
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         if (cameraController != null)
         {
-            cameraController.enabled = true; // Включить скрипт управления камерой
+            cameraController.enabled = true;
+            Debug.Log("Camera enabled: " + cameraController.enabled);
         }
         else
         {
-            Debug.LogWarning("Camera controller is not assigned!"); // Предупреждение, если ссылка не задана
+            Debug.LogWarning("Camera Controller не найден!");
         }
     }
 
     public void Pause()
     {
-        pauseMenu.SetActive(true); // Показать меню паузы
-        Time.timeScale = 0f; // Остановить время
-        PauseGame = true; // Изменить состояние паузы на true
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+        PauseGame = true;
+        Debug.Log("Pause - PauseGame: " + PauseGame);
 
-        // Отключить управление камерой
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         if (cameraController != null)
         {
-            cameraController.enabled = false; // Отключить скрипт управления камерой
+            cameraController.enabled = false;
+            Debug.Log("Camera disabled: " + cameraController.enabled);
         }
         else
         {
-            Debug.LogWarning("Camera controller is not assigned!"); // Предупреждение, если ссылка не задана
+            Debug.LogWarning("Camera Controller не найден!");
         }
     }
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f; // Возобновить время перед загрузкой меню
-        SceneManager.LoadScene("Menu"); // Загрузить сцену меню
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Menu");
     }
 }

@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5186774646756533870}
+  - component: {fileID: 534333745487105509}
   m_Layer: 0
   m_Name: Board
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,6 +34,19 @@ Transform:
   - {fileID: 1068134896391742498}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &534333745487105509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8993761481156071760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd36c048c29fb6d4680d50fca2e22b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyDistance: 3
 --- !u!1001 &405486825905328088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -93,6 +107,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6301776048518699705, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
+      propertyPath: m_TagString
+      value: Wood
+      objectReference: {fileID: 0}
     - target: {fileID: -4840318634463859386, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -104,6 +122,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
       propertyPath: m_Name
       value: board_low
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
+      propertyPath: m_TagString
+      value: Wood
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -172,8 +194,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.32161134, y: 6.4622984, z: 1.9999999}
-  m_Center: {x: 0.05943724, y: 3.748104, z: 0.0000000034906935}
+  m_Size: {x: 2.4937835, y: 6.4622984, z: 1.9999999}
+  m_Center: {x: -1.0266488, y: 3.7481074, z: -0.0000000014476873}
 --- !u!1001 &673427207030145993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -234,6 +256,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6301776048518699705, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
+      propertyPath: m_TagString
+      value: Wood
+      objectReference: {fileID: 0}
     - target: {fileID: -4840318634463859386, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -245,6 +271,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
       propertyPath: m_Name
       value: board_low (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 247c86a744e338e4f99f12b67a2e1867, type: 3}
+      propertyPath: m_TagString
+      value: Wood
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -313,5 +343,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.32161134, y: 6.4622984, z: 1.9999999}
-  m_Center: {x: 0.05943724, y: 3.7481003, z: -0.0000000034906935}
+  m_Size: {x: 2.6521602, y: 6.4622984, z: 1.9999999}
+  m_Center: {x: -1.1058371, y: 3.7481074, z: 0.0000000014476873}
