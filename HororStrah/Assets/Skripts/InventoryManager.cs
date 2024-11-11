@@ -33,7 +33,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             isOpened = !isOpened;
@@ -65,16 +65,28 @@ public class InventoryManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (hit.collider.gameObject.GetComponent<Item>() != null)
+                Item itemComponent = hit.collider.gameObject.GetComponent<Item>();
+                if (itemComponent != null)
                 {
-                    AddItem(hit.collider.gameObject.GetComponent<Item>().item, hit.collider.gameObject.GetComponent<Item>().amount);
+                    // Проверяем, является ли предмет запиской
+                    if (itemComponent.item is NoteItem)
+                    {
+                        // Находим и добавляем время
+                        TimerController timerController = FindObjectOfType<TimerController>();
+                        if (timerController != null)
+                        {
+                            timerController.AddTime(60f); // Добавляем минуту
+                            Debug.Log("Добавлена 1 минута от записки!");
+                        }
+                    }
+
+                    AddItem(itemComponent.item, itemComponent.amount);
                     Destroy(hit.collider.gameObject);
                 }
             }
 
             Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.green);
         }
-        
         else
         {
             Debug.DrawRay(ray.origin, ray.direction * reachDistance, Color.red);

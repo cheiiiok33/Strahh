@@ -10,23 +10,19 @@ public class DoorInteractionWithButtons : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     private string enteredCode = "";
-    private string correctCode = "322";
+    private const string correctCode = "322";
     private bool isPlayerNearby = false;
     private bool isOpen = false;
     private bool isPanelOpen = false;
-    private bool isCodeCorrect = false; // Новый флаг
-    private Collider doorCollider;
+    private bool isCodeCorrect = false;
 
     void Start()
     {
         codePanel.SetActive(false);
-        doorCollider = GetComponent<Collider>();
-
         if (doorAnimator == null)
         {
             doorAnimator = GetComponent<Animator>();
         }
-
         if (codeDisplayText != null)
         {
             codeDisplayText.text = "";
@@ -37,24 +33,14 @@ public class DoorInteractionWithButtons : MonoBehaviour
     {
         if (isPlayerNearby && Input.GetKeyDown(KeyCode.E))
         {
-            if (isCodeCorrect)
+            if (isOpen || isCodeCorrect)
             {
-                ToggleDoor();               
+                ToggleDoor();
             }
-            else if (!isOpen)
+            else
             {
-                if (!isPanelOpen)
-                {
-                    OpenCodePanel();                  
-                }
-                else
-                {
-                    CloseCodePanel();               
-                }
+                ToggleCodePanel();
             }
-            
-           
-
         }
     }
 
@@ -64,7 +50,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
         {
             enteredCode += number;
             UpdateCodeDisplay();
-            Debug.Log("Кнопка нажата: " + number);
         }
     }
 
@@ -73,11 +58,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (codeDisplayText != null)
         {
             codeDisplayText.text = enteredCode;
-            Debug.Log("Текущий код: " + enteredCode);
-        }
-        else
-        {
-            Debug.LogError("codeDisplayText не инициализирован!");
         }
     }
 
@@ -85,16 +65,12 @@ public class DoorInteractionWithButtons : MonoBehaviour
     {
         if (enteredCode == correctCode)
         {
-            isCodeCorrect = true; // Устанавливаем флаг
-            ToggleDoor();
+            isCodeCorrect = true;
             CloseCodePanel();
-            
         }
         else
         {
-            enteredCode = "";
-            UpdateCodeDisplay();
-            Debug.Log("Неверный код! Попробуйте снова.");
+            OnClearCode();
         }
     }
 
@@ -106,49 +82,57 @@ public class DoorInteractionWithButtons : MonoBehaviour
 
     private void ToggleDoor()
     {
+        if (!isPlayerNearby) return;
+
         isOpen = !isOpen;
         doorAnimator.SetBool("isOpen", isOpen);
 
-        if (doorCollider != null)
-        {
-            doorCollider.enabled = !isOpen;
-        }
-
         if (isOpen)
         {
+            Debug.Log("Дверь открыта.");
+        }
+        else
+        {
+            Debug.Log("Дверь закрыта.");
+        }
+    }
+
+    private void ToggleCodePanel()
+    {
+        if (isPanelOpen)
+        {
             CloseCodePanel();
+        }
+        else
+        {
+            OpenCodePanel();
         }
     }
 
     private void OpenCodePanel()
     {
         codePanel.SetActive(true);
-        if (cameraController != null)
-        {
-            cameraController.enabled = false;
-            playerController.enabled = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+        SetPlayerControl(false);
         isPanelOpen = true;
-
-        Debug.Log("Панель открыта. Управление камерой отключено.");
     }
 
     private void CloseCodePanel()
     {
         codePanel.SetActive(false);
+        SetPlayerControl(true);
+        isPanelOpen = false;
+        OnClearCode();
+    }
+
+    private void SetPlayerControl(bool enabled)
+    {
         if (cameraController != null)
         {
-            cameraController.enabled = true;
-            playerController.enabled = true;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            cameraController.enabled = enabled;
+            playerController.enabled = enabled;
+            Cursor.lockState = enabled ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !enabled;
         }
-        isPanelOpen = false;
-        enteredCode = "";
-        UpdateCodeDisplay();
-        Debug.Log("Панель закрыта. Управление камерой включено.");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -156,7 +140,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearby = true;
-            Debug.Log("Игрок подошёл к двери, нажмите 'E' для взаимодействия.");
         }
     }
 
@@ -165,7 +148,6 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearby = false;
-            Debug.Log("Игрок отошёл от двери.");
             CloseCodePanel();
         }
     }
