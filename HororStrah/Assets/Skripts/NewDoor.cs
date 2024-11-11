@@ -28,7 +28,7 @@ public class DoorInteractionWithRaycast : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 3f)) // 3f - максимальная дистанция рейкаста
             {
-                if (hit.collider.gameObject == gameObject)
+                if (hit.collider.CompareTag("InteractableDoor"))
                 {
                     ToggleDoor();
                 }
