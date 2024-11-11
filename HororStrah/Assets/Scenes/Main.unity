@@ -14992,11 +14992,44 @@ PrefabInstance:
       propertyPath: m_Name
       value: DoorNoKey
       objectReference: {fileID: 0}
+    - target: {fileID: 8035949674389312039, guid: 1986d5cf244381b42a2b560f82d8b671, type: 3}
+      propertyPath: m_TagString
+      value: InteractableDoor
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8035949674389312039, guid: 1986d5cf244381b42a2b560f82d8b671, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8375217148948742578}
   m_SourcePrefab: {fileID: 100100000, guid: 1986d5cf244381b42a2b560f82d8b671, type: 3}
+--- !u!1 &8375217148948742574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8035949674389312039, guid: 1986d5cf244381b42a2b560f82d8b671, type: 3}
+  m_PrefabInstance: {fileID: 8375217148948742573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8375217148948742578
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8375217148948742574}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 943f5a8e07e812345bce688953c1114c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &8786981711766056648
 PrefabInstance:
   m_ObjectHideFlags: 0
