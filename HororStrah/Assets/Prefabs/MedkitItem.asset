@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3463be2bab1aeac45960ff103a087375, type: 3}
-  m_Name: Medkit Item
+  m_Name: MedkitItem
   m_EditorClassIdentifier: 
-  itemName: MedKit
-  maximumAmount: 0
-  itemPrefab: {fileID: 0}
+  itemName: Medkit
+  maximumAmount: 1
+  itemPrefab: {fileID: 108584683043209193, guid: 90d02e0cd47f40d42900de037ebcb3d9, type: 3}
   icon: {fileID: 0}
   itemType: 6
   itemDescription: 
