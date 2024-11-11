@@ -24,6 +24,17 @@ public class InventorySlot : MonoBehaviour
         iconGO.GetComponent<Image>().sprite = icon;
     }
 
+
+
+    private void ClearSlot()
+    {
+        item = null;
+        amount = 0;
+        isEmpty = true;
+        iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        iconGO.GetComponent<Image>().sprite = null;
+        itemAmountText.text = "";
+    }
     public void UseItem()
     {
         if (item != null && item is MedkitItem)
@@ -47,15 +58,5 @@ public class InventorySlot : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void ClearSlot()
-    {
-        item = null;
-        amount = 0;
-        isEmpty = true;
-        iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
-        iconGO.GetComponent<Image>().sprite = null;
-        itemAmountText.text = "";
     }
 }

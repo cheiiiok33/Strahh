@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class InventoryManager : MonoBehaviour
     public bool isOpened;
     public float reachDistance = 3f;
     private Camera mainCamera;
+    private Outline _LastOutlineObject;
 
     private void Awake()
     {
@@ -58,6 +60,15 @@ public class InventoryManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, reachDistance))
         {
+            if (hit.transform.gameObject.CompareTag("Item"))
+            {
+                if(_LastOutlineObject != null)
+                {
+                    _LastOutlineObject.enabled = false;
+                    _LastOutlineObject = hit.transform.gameObject.GetComponent<Outline>();
+                    _LastOutlineObject.enabled = true;
+                }
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (hit.collider.gameObject.GetComponent<Item>() != null)
@@ -122,4 +133,5 @@ public class InventoryManager : MonoBehaviour
         }
         Debug.LogWarning("Инвентарь полон! Невозможно добавить предмет: " + _item.itemName);
     }
+   
 }

@@ -42,6 +42,31 @@ public class DragAndDropItem : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         if (oldSlot.isEmpty)
         {
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.HideNoteText();
+            }
+            return;
+        }
+
+        isDragging = false;
+
+        if (eventData.button == PointerEventData.InputButton.Left && !isDragging)
+        {
+            if (oldSlot.item.itemType == ItemType.Note)
+            {
+                if (UIManager.instance != null)
+                {
+                    UIManager.instance.DisplayNoteText(oldSlot.item.itemDescription);
+                }
+            }
+            else if (oldSlot.item.itemType == ItemType.Medkit)
+            {
+                oldSlot.UseItem();
+            }
+        }
+        if (oldSlot.isEmpty)
+        {
             // Если кликнули по пустому слоту, закрываем текст записки
             if (UIManager.instance != null)
             {
