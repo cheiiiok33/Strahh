@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c437c0e7dfe04004eae91e3c46cfd328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   item: {fileID: 11400000, guid: 9ca4a96699e12834ea8976b11177031d, type: 2}
+=======
+  item: {fileID: 11400000, guid: 287547d49a922b240a8239cadbb98a8a, type: 2}
+>>>>>>> origin/main
   amount: 1
 --- !u!54 &2061943145611160588
 Rigidbody:
