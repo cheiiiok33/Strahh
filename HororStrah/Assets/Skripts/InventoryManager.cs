@@ -63,10 +63,6 @@ public class InventoryManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, reachDistance))
         {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (hit.collider.gameObject.GetComponent<Item>() != null)

@@ -7,6 +7,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
     [SerializeField] private GameObject codePanel;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private TextMeshProUGUI codeDisplayText;
+    [SerializeField] private PlayerController playerController;
 
     private string enteredCode = "";
     private string correctCode = "322";
@@ -38,19 +39,22 @@ public class DoorInteractionWithButtons : MonoBehaviour
         {
             if (isCodeCorrect)
             {
-                ToggleDoor();
+                ToggleDoor();               
             }
             else if (!isOpen)
             {
                 if (!isPanelOpen)
                 {
-                    OpenCodePanel();
+                    OpenCodePanel();                  
                 }
                 else
                 {
-                    CloseCodePanel();
+                    CloseCodePanel();               
                 }
             }
+            
+           
+
         }
     }
 
@@ -84,6 +88,7 @@ public class DoorInteractionWithButtons : MonoBehaviour
             isCodeCorrect = true; // Устанавливаем флаг
             ToggleDoor();
             CloseCodePanel();
+            
         }
         else
         {
@@ -121,8 +126,12 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (cameraController != null)
         {
             cameraController.enabled = false;
+            playerController.enabled = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         isPanelOpen = true;
+
         Debug.Log("Панель открыта. Управление камерой отключено.");
     }
 
@@ -132,6 +141,9 @@ public class DoorInteractionWithButtons : MonoBehaviour
         if (cameraController != null)
         {
             cameraController.enabled = true;
+            playerController.enabled = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         isPanelOpen = false;
         enteredCode = "";
