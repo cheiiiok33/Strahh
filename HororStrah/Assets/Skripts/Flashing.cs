@@ -11,7 +11,7 @@ public class FlashlightController : MonoBehaviour
             flashlight.enabled = false;
         }
     }
-
+    //пофиксил баг с фонариком
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
