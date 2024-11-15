@@ -9,7 +9,7 @@ public class AxeItem : ItemScriptableObject
     void OnEnable()
     {
         itemType = ItemType.Axe;
-    }
+    } 
 
     public void SetupAsNote(string description)
     {
